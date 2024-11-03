@@ -13,6 +13,8 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+overall_headshot_rate = 
+
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
@@ -35,5 +37,17 @@ def get_recent_matches(puuid):
     else:
         print("Error fetching matches:", response.status_code)
         return None
+    
+def calculate_headshot_percentage(match_data):
+    headshots = match_data.get("headshots", 0)
+    bodyshots = match_data.get("bodyshots", 0)
+    legshots = match_data.get("legshots", 0)
+    
+    total_shots = headshots + bodyshots + legshots
+    if total_shots == 0:
+        return 0, headshots
+    
+    headshot_percentage = (headshots / total_shots) * 200
+    return headshot_percentage, headshots
     
 bot.run(DISCORD_TOKEN)
